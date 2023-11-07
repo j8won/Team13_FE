@@ -9,8 +9,6 @@ import Button from "@/components/common/button/Button.jsx";
 import FundDetailInfoHeartButton from "@/components/fund-detail/information/FundDetailInfoHeartButton.jsx";
 import AlertIcon from "@/assets/icon/AlertIcon.jsx";
 import SimpleCelebCard from "@/components/celebrity/SimpleCelebCard.jsx";
-import { useEffect } from "react";
-import { PropTypes } from "prop-types";
 
 const Styled = {
   InfoWrap: styled.article`
@@ -107,20 +105,10 @@ const Styled = {
   `,
 };
 
-/**
- * 펀딩 상세 페이지의 펀딩 정보 컴포넌트
- * @param {function} setIsOrganizer
- */
-
-function Information({ setIsOrganizer }) {
+function Information() {
   const navigate = useNavigate();
   const { fundId } = useParams();
   const { data } = useFundDetailInfoQuery({ fundId: fundId });
-  const { isOrganizer } = data;
-
-  useEffect(() => {
-    setIsOrganizer(isOrganizer);
-  }, [isOrganizer]);
 
   const handleSponsorshipButtonClick = () => {
     navigate(`${routes.support}/${fundId}`);
@@ -196,9 +184,5 @@ function Information({ setIsOrganizer }) {
     </Styled.InfoWrap>
   );
 }
-
-Information.propTypes = {
-  setIsOrganizer: PropTypes.func,
-};
 
 export default Information;
