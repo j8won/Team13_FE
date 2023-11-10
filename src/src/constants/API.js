@@ -2,7 +2,6 @@ const AUTH = {
   LOGIN: "/login",
   SIGN_UP: "/signup",
   DELETE_ACCOUNT: "/delete-account",
-  EMAIL_DUPLICATE: "/signup/check",
 };
 
 const FUND = {

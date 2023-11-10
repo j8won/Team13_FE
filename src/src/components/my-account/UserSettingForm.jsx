@@ -27,16 +27,13 @@ function UserSettingForm() {
   } = useSetImageFileToUrl(data.profileImageUrl);
 
   const handleUserSettingSubmit = (data) => {
-    const requestDTO = {
+    const requestBody = {
+      profileFile: profileImageFile,
       password: data.currentPassword,
       newPassword: data.changedPassword,
     };
 
-    const formData = new FormData();
-    formData.append("thumbnail", profileImageFile);
-    formData.append("requestDTO", JSON.stringify(requestDTO));
-
-    mutate(formData);
+    mutate(requestBody);
   };
 
   return (

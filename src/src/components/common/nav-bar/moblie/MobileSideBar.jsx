@@ -98,7 +98,7 @@ function MobileSideBar({ setIsSideBarOpen }) {
       <Styled.Backdrop>
         <Styled.SideBar ref={sideBarRef}>
           <Styled.Profile>
-            {isLoggedIn && profileImageUrl ? (
+            {isLoggedIn ? (
               <img
                 className="profileImg"
                 src={profileImageUrl}

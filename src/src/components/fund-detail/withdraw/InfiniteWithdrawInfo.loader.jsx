@@ -6,9 +6,9 @@ import { PropTypes } from "prop-types";
  * @param {React.RefObject} loaderRef
  */
 
-function InfiniteWithdrawInfoLoader({ loaderRef, ...divProps }) {
+function InfiniteWithdrawInfoLoader({ loaderRef }) {
   return (
-    <div ref={loaderRef} {...divProps}>
+    <div ref={loaderRef}>
       <WithdrawInfoBarSkeleton />
       <WithdrawInfoBarSkeleton />
     </div>

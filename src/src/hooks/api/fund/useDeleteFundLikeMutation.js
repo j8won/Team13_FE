@@ -10,8 +10,8 @@ function useDeleteFundLikeMutation(handleSuccess) {
       return await FundAPI.deleteFundLike(fundId);
     },
     {
-      onError: () => {
-        toast.error("좋아요 취소를 실패했습니다");
+      onError: (err) => {
+        toast.error(err.response.data.message);
       },
       onSuccess: handleSuccess,
     },
