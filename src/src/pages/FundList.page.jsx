@@ -42,16 +42,17 @@ function FundListPage() {
 
   const [sortType, setSortType] = useState(SORT_ORDER.FUND.CLOSER_DEADLINE);
 
-  const fundListSortTypeArray = ["CLOSER_DEADLINE", "RECENT_ENROLLMENT"].map(
-    (type) => {
-      return {
-        key: SORT_ORDER.KOREAN[type],
-        func: () => {
-          setSortType(SORT_ORDER.FUND[type]);
-        },
-      };
-    },
-  );
+  const fundListSortTypeArray = [
+    SORT_ORDER.FUND.CLOSER_DEADLINE,
+    SORT_ORDER.FUND.RECENT_ENROLLMENT,
+  ].map((type) => {
+    return {
+      key: SORT_ORDER.KOREAN[type],
+      func: () => {
+        setSortType(type);
+      },
+    };
+  });
 
   return (
     <>

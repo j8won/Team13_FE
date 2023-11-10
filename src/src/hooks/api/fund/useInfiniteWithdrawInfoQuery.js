@@ -11,8 +11,7 @@ function useInfiniteWithdrawInfoQuery({ fundId }) {
     {
       suspense: true,
       getNextPageParam: (lastPage) => {
-        if (lastPage.isLastPage) return;
-        return lastPage.currentPage + 1;
+        return lastPage.config.params.pageIndex + 1;
       },
     },
   );
