@@ -8,17 +8,25 @@ import {
 
 /**
  * 펀딩 목록 조회 api
- * @param {number | string} pageIndex
+ * @param {number | string} postId
  * @param {string=} keyword
  * @param {string=} sortType
  * @returns {Promise<axios.AxiosResponse<any>>} a
  */
 
-const getFundInfoList = async ({ pageIndex, keyword, sortType }) => {
+const getFundInfoList = async ({ postId, keyword, sortType }) => {
+  if (keyword) {
+    return await instance({
+      url: API.FUND.LIST + "/search/keyword",
+      method: "GET",
+      params: { postId: postId, sort: sortType, size: 12, keyword },
+    });
+  }
+
   return await instance({
     url: API.FUND.LIST,
     method: "GET",
-    params: { pageIndex: pageIndex, keyword: keyword, sortType: sortType },
+    params: { postId: postId, sort: sortType, size: 12 },
   });
 };
 
@@ -49,12 +57,37 @@ const deleteFundLike = async (fundId) => {
   });
 };
 
+/**
+ * 펀딩 상세 정보 조회
+ * @param {number | string }fundId
+ * @returns {Promise<FundDetailInfoDto>}
+ */
+
 const getDetailInfoByFundId = async (fundId) => {
-  const { data } = await instance({
+  const response = await instance({
     url: API.FUND.DETAIL(fundId),
     method: "GET",
   });
-  return new FundDetailInfoDto(data);
+
+  const data = response.data.response;
+  return new FundDetailInfoDto({
+    fundId: data?.postId,
+    fundTitle: data?.title,
+    thumbnailUrl: data?.thumbnail,
+    createdAt: data?.createdAt,
+    targetDate: data?.deadline,
+    targetMoney: data?.targetPrice,
+    currentMoney: data?.currentAmount,
+    participantNumber: data?.participant,
+    celebrityId: data?.celebId,
+    celebrityName: data?.celebrity,
+    celebrityProfileUrl: data?.celebImg,
+    organizerId: data?.writerId,
+    organizerName: data?.writer,
+    organizerProfileUrl: data?.writerImg,
+    likeCount: data?.heartCount,
+    isOrganizer: data?.eqWriter,
+  });
 };
 
 /**
@@ -82,7 +115,81 @@ const getFundIntroductionByFundId = async (fundId) => {
     method: "GET",
   });
 
-  return new FundIntroDto({ introduction: data.introduction });
+  return new FundIntroDto({ introduction: data?.response });
+};
+
+/**
+ * 펀딩 출금 내역 조회
+ * @param {string || number} fundId
+ * @param {number} pageIndex
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+const getFundWithdrawInfo = async ({ fundId, pageIndex }) => {
+  const { data } = await instance({
+    url: API.FUND.WITHDRAW(fundId),
+    method: "GET",
+    params: { pageIndex: pageIndex },
+  });
+
+  return data.response;
+};
+
+/**
+ * 출금 가능 금액 조회
+ * @param {string || number} fundId
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+const getFundBalance = async (fundId) => {
+  const { data } = await instance({
+    url: API.FUND.BALANCE(fundId),
+    method: "GET",
+  });
+
+  return data.balance;
+};
+
+/**
+ * 출금 신청 post
+ * @param {number | string} fundId
+ * @param {string} usage
+ * @param {string} depositAccount ####-##-#######
+ * @param {number} amount
+ * @returns {Promise<*>}
+ */
+
+const postFundWithdraw = async ({ fundId, usage, depositAccount, amount }) => {
+  return await instance({
+    url: API.FUND.WITHDRAW(fundId),
+    method: "POST",
+    data: {
+      usage,
+      depositAccount,
+      amount,
+    },
+  });
+};
+
+/**
+ * 출금 인증 이미지 저장하기
+ * @param {string || number} fundId
+ * @param {string || number} withdrawId
+ * @param {FormData} imageForm
+ * @returns {Promise<*>}
+ */
+
+const postFundWithdrawEvidenceImage = async ({
+  fundId,
+  withdrawId,
+  imageForm,
+}) => {
+  return await instance({
+    url: API.FUND.WITHDRAW_IMAGE({ fundId, withdrawId }),
+    method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    data: imageForm,
+  });
 };
 
 export default {
@@ -92,4 +199,8 @@ export default {
   getCoAdminByFundId,
   getFundIntroductionByFundId,
   getDetailInfoByFundId,
+  getFundWithdrawInfo,
+  getFundBalance,
+  postFundWithdraw,
+  postFundWithdrawEvidenceImage,
 };

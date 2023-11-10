@@ -6,12 +6,12 @@ import toast from "react-hot-toast";
 function useDeleteFundLikeMutation(handleSuccess) {
   return useMutation(
     [API.FUND.LIKE],
-    ({ fundId }) => {
-      return FundAPI.deleteFundLike(fundId);
+    async ({ fundId }) => {
+      return await FundAPI.deleteFundLike(fundId);
     },
     {
-      onError: (err) => {
-        toast.error(err.response.data.message);
+      onError: () => {
+        toast.error("좋아요 취소를 실패했습니다");
       },
       onSuccess: handleSuccess,
     },

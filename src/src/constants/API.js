@@ -2,6 +2,7 @@ const AUTH = {
   LOGIN: "/login",
   SIGN_UP: "/signup",
   DELETE_ACCOUNT: "/delete-account",
+  EMAIL_DUPLICATE: "/signup/check",
 };
 
 const FUND = {
@@ -15,6 +16,15 @@ const FUND = {
   },
   DETAIL: (fundId) => {
     return `/posts/${fundId}`;
+  },
+  WITHDRAW: (fundId) => {
+    return `/posts/${fundId}/withdrawals`;
+  },
+  BALANCE: (fundId) => {
+    return `/posts/${fundId}/balance`;
+  },
+  WITHDRAW_IMAGE: ({ fundId, withdrawId }) => {
+    return `/posts/${fundId}/withdrawals/${withdrawId}`;
   },
 };
 
@@ -39,8 +49,17 @@ const CELEBRITY = {
   },
 };
 
+const MY_FUND = {
+  NICKNAME: "/myfunding/nickname",
+  FOLLOW: "/myfunding/followers",
+  LIKE: "/myfunding/like",
+  SUPPORT: "/myfunding/support",
+  HOST: "/myfunding/host",
+};
+
 Object.freeze(AUTH);
 Object.freeze(FUND);
 Object.freeze(USER);
 Object.freeze(CELEBRITY);
-export default { AUTH, FUND, USER, CELEBRITY };
+Object.freeze(MY_FUND);
+export default { AUTH, FUND, USER, CELEBRITY, MY_FUND };
