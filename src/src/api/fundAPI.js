@@ -8,25 +8,17 @@ import {
 
 /**
  * 펀딩 목록 조회 api
- * @param {number | string} postId
+ * @param {number | string} pageIndex
  * @param {string=} keyword
  * @param {string=} sortType
  * @returns {Promise<axios.AxiosResponse<any>>} a
  */
 
-const getFundInfoList = async ({ postId, keyword, sortType }) => {
-  if (keyword) {
-    return await instance({
-      url: API.FUND.LIST + "/search/keyword",
-      method: "GET",
-      params: { postId: postId, sort: sortType, size: 12, keyword },
-    });
-  }
-
+const getFundInfoList = async ({ pageIndex, keyword, sortType }) => {
   return await instance({
     url: API.FUND.LIST,
     method: "GET",
-    params: { postId: postId, sort: sortType, size: 12 },
+    params: { pageIndex: pageIndex, keyword: keyword, sortType: sortType },
   });
 };
 
@@ -64,30 +56,11 @@ const deleteFundLike = async (fundId) => {
  */
 
 const getDetailInfoByFundId = async (fundId) => {
-  const response = await instance({
+  const { data } = await instance({
     url: API.FUND.DETAIL(fundId),
     method: "GET",
   });
-
-  const data = response.data.response;
-  return new FundDetailInfoDto({
-    fundId: data?.postId,
-    fundTitle: data?.title,
-    thumbnailUrl: data?.thumbnail,
-    createdAt: data?.createdAt,
-    targetDate: data?.deadline,
-    targetMoney: data?.targetPrice,
-    currentMoney: data?.currentAmount,
-    participantNumber: data?.participant,
-    celebrityId: data?.celebId,
-    celebrityName: data?.celebrity,
-    celebrityProfileUrl: data?.celebImg,
-    organizerId: data?.writerId,
-    organizerName: data?.writer,
-    organizerProfileUrl: data?.writerImg,
-    likeCount: data?.heartCount,
-    isOrganizer: data?.eqWriter,
-  });
+  return new FundDetailInfoDto(data);
 };
 
 /**
@@ -115,7 +88,7 @@ const getFundIntroductionByFundId = async (fundId) => {
     method: "GET",
   });
 
-  return new FundIntroDto({ introduction: data?.response });
+  return new FundIntroDto({ introduction: data.introduction });
 };
 
 /**
@@ -125,13 +98,11 @@ const getFundIntroductionByFundId = async (fundId) => {
  * @returns {Promise<axios.AxiosResponse<any>>}
  */
 const getFundWithdrawInfo = async ({ fundId, pageIndex }) => {
-  const { data } = await instance({
+  return await instance({
     url: API.FUND.WITHDRAW(fundId),
     method: "GET",
     params: { pageIndex: pageIndex },
   });
-
-  return data.response;
 };
 
 /**

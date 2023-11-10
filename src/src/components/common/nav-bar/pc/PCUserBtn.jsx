@@ -68,7 +68,7 @@ function PCUserBtn() {
 
   return (
     <Styled.UserBtn ref={userBtnRef}>
-      {isLoggedIn && profileImageUrl ? (
+      {isLoggedIn ? (
         <img
           onClick={() => setIsMenuModalOpen(true)}
           className="profileImg"

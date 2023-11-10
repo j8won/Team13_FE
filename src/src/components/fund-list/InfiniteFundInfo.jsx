@@ -22,48 +22,24 @@ function InfiniteFundInfo({ keyword, sortType }) {
       sortType,
     });
 
-  const isLastPage =
-    infiniteFundInfoData.pages.at(-1)?.data?.response?.lastPage;
-
   useIntersectionObserver(async () => {
     await fetchNextPage();
   }, loaderRef);
 
   const mapInfoToFundInfoDto = (info) => {
-    return new FundInfoDto({
-      fundId: info.postId,
-      fundTitle: info.title,
-      thumbnailUrl: info.thumbnail,
-      targetDate: info.deadline,
-      targetMoney: info.targetPrice,
-      currentMoney: info.currentAmount,
-      celebrityId: info.celebId,
-      celebrityName: info.celebrity,
-      celebrityProfileUrl: info.celebImg,
-      organizerId: info.writerId,
-      organizerName: info.writer,
-      isInUserWishList: info.isHeart,
-    });
+    return new FundInfoDto({ ...info });
   };
 
   return (
     <>
       <GridTemplate>
         {infiniteFundInfoData?.pages.map((page) =>
-          page?.data?.response?.content?.map((info, index) => (
+          page?.data?.fundList.map((info, index) => (
             <FundInfoGridCard key={index} {...mapInfoToFundInfoDto(info)} />
           )),
         )}
       </GridTemplate>
-
-      <InfiniteFundInfoLoader
-        loaderRef={loaderRef}
-        style={
-          isLastPage && {
-            display: "none",
-          }
-        }
-      />
+      <InfiniteFundInfoLoader loaderRef={loaderRef} />
     </>
   );
 }

@@ -14,7 +14,6 @@ import InfiniteCelebInfoLoader from "./InfiniteCelebInfo.loader.jsx";
  * @param {string} sortType 순서
  */
 
-// TODO: 제대로 동작하는지 다시 확인해야함
 function InfiniteCelebInfo({ keyword, sortType }) {
   const loaderRef = useRef();
 
@@ -24,38 +23,24 @@ function InfiniteCelebInfo({ keyword, sortType }) {
       sortType,
     });
 
-  const isLastPage =
-    infiniteCelebInfoData.pages.at(-1)?.data?.response?.lastPage;
-
   useIntersectionObserver(async () => {
     await fetchNextPage();
   }, loaderRef);
 
   const mapInfoToCelebInfoDto = (info) => {
-    return new CelebInfoDto({
-      celebId: info.celebId,
-      celebName: info.celebName,
-      profileUrl: info.profileImage,
-    });
+    return new CelebInfoDto({ ...info });
   };
 
   return (
     <>
       <GridTemplate>
         {infiniteCelebInfoData?.pages.map((page) =>
-          page?.data?.response?.content.map((info, index) => (
+          page?.data?.celebList.map((info, index) => (
             <CelebInfoGridCard key={index} {...mapInfoToCelebInfoDto(info)} />
           )),
         )}
       </GridTemplate>
-      <InfiniteCelebInfoLoader
-        loaderRef={loaderRef}
-        style={
-          isLastPage && {
-            visibility: "hidden",
-          }
-        }
-      />
+      <InfiniteCelebInfoLoader loaderRef={loaderRef} />
     </>
   );
 }

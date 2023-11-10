@@ -16,7 +16,7 @@ instance.interceptors.request.use(
 
     if (!accessToken) return config;
 
-    config.headers.Authorization = accessToken;
+    config.headers.Authorization = `Bearer ${accessToken}`;
     return config;
   },
   function (err) {
